@@ -35,18 +35,17 @@ export default defineComponent({
   setup() {
     const searchValue = ref('')
 
-    const isMarked = (email) => {
-      if (searchValue.value) {
-        return email.includes(searchValue.value)
-      }
-    }
+    const filteredEmails = computed(() => {
+      return emails.map(email => ({
+        email,
+        marked: searchValue.value && email.includes(searchValue.value)
+      }))
+    })
 
     return {
-      emails,
-      isMarked,
-      searchValue
+      searchValue,
+      filteredEmails
     }
-
   },
 
   template: `
@@ -55,8 +54,8 @@ export default defineComponent({
         <input type="search" v-model="searchValue" aria-label="Search" />
       </div>
       <ul aria-label="Emails">
-        <li v-for="email in emails" :class="{ marked : isMarked(email)}">
-          {{email}}
+        <li v-for="item in filteredEmails" :class="{ marked : item.marked }">
+          {{ item.email }}
         </li>
       </ul>
     </div>
