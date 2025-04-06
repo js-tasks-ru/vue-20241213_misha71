@@ -1,42 +1,46 @@
-import { defineComponent, onMounted, ref, computed, watch } from 'vue'
+import { defineComponent, onBeforeMount, ref, computed, watch } from 'vue'
 import { getMeetup } from './meetupsService.ts'
 
 export default defineComponent({
   name: 'SelectedMeetupApp',
 
   setup() {
-    const currentMettup = ref({})
+    const currentMeetup = ref({})
     const loading = ref(false)
     const meetupId = ref(1)
 
-    onMounted(() => {
-      getItem(1)
-    })
-
+    // Загрузка данных митапа
     function getItem(id) {
       loading.value = true
       getMeetup(id).then((meetup) => {
-        currentMettup.value = meetup;
+        currentMeetup.value = meetup
         loading.value = false
       })
     }
 
+    // Загрузка первого митапа при монтировании
+    onBeforeMount(() => {
+      getItem(meetupId.value)
+    })
 
+    // Обработчики кнопок
     function getNext() {
-      getItem(currentMettup.value.id + 1)
+      if (meetupId.value < 5) {
+        meetupId.value += 1
+      }
     }
+
     function getPrevious() {
-      getItem(currentMettup.value.id - 1)
+      if (meetupId.value > 1) {
+        meetupId.value -= 1
+      }
     }
 
+    // Вычисляемые свойства для блокировки кнопок
+    const canGetPrevious = computed(() => meetupId.value === 1)
+    const canGetNext = computed(() => meetupId.value === 5)
 
-    const canGetPrevious = computed(() => {
-      return currentMettup.value.id === 1
-    })
-    const canGetNext = computed(() => {
-      return currentMettup.value.id === 5
-    })
-
+    // Наблюдатель за изменением meetupId
     watch(meetupId, (newValue) => {
       getItem(newValue)
     })
@@ -49,39 +53,60 @@ export default defineComponent({
       loading,
       canGetPrevious,
       canGetNext,
-      currentMettup
+      currentMeetup,
     }
   },
 
   template: `
     <div class="meetup-selector">
       <div class="meetup-selector__control">
-        <button class="button button--secondary" @click="getPrevious" :disabled="canGetPrevious || loading" type="button" disabled>Предыдущий</button>
+        <button
+          class="button button--secondary"
+          @click="getPrevious"
+          :disabled="canGetPrevious || loading"
+          type="button"
+        >
+          Предыдущий
+        </button>
 
         <div class="radio-group" role="radiogroup">
-          <div class="radio-group__button" v-for="item, index in 5" :key="index">
+          <div
+            class="radio-group__button"
+            v-for="index in 5"
+            :key="index"
+          >
             <input
-              :id="index"
-              :checked="currentMettup.id === index + 1"
+              :id="'radio-' + index"
               class="radio-group__input"
               type="radio"
               name="meetupId"
               v-model="meetupId"
-              :value="index + 1"
+              :value="index"
             />
-            <label for="index" class="radio-group__label">{{ index + 1 }}</label>
+            <label
+              :for="'radio-' + index"
+              class="radio-group__label"
+            >
+              {{ index }}
+            </label>
           </div>
         </div>
 
-        <button class="button button--secondary" :disabled="canGetNext || loading" @click="getNext" type="button">Следующий</button>
+        <button
+          class="button button--secondary"
+          @click="getNext"
+          :disabled="canGetNext || loading"
+          type="button"
+        >
+          Следующий
+        </button>
       </div>
 
       <div class="meetup-selector__cover">
         <div class="meetup-cover">
-          <h1 class="meetup-cover__title">{{currentMettup.title}}</h1>
+          <h1 class="meetup-cover__title">{{ currentMeetup.title }}</h1>
         </div>
       </div>
-
     </div>
   `,
 })
