@@ -29,10 +29,10 @@ export default defineComponent({
   template: `
     <div>
       <p style="margin: 1em 0">
-        <UiCounter v-model:count="count1" />
+        <UiCounter v-model:count="count1" @update:count="(value)=>{count1 = value}"/>
       </p>
       <p style="margin: 1em 0">
-        <UiCounter v-model:count="count2" :min="1" :max="3" />
+        <UiCounter v-model:count="count2" :min="1" :max="3" @update:count="(value)=>{count2 = value}"/>
       </p>
       <p style="margin: 1em 0">
         <UiButton kind="primary" @click="reset">Reset</UiButton>
