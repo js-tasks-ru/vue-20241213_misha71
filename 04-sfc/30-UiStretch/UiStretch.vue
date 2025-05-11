@@ -7,14 +7,14 @@
 </template>
 
 <style scoped>
-.stretch-container > * {
+.stretch-container > :deep(*) {
   width: 100%;
   height: 100%;
 }
 
-.stretch-container > img,
-.stretch-container > video,
-.stretch-container > picture {
-  object-fit: scale-down;
+.stretch-container > :deep(img),
+.stretch-container > :deep(video),
+.stretch-container > :deep(picture) {
+  object-fit: contain;
 }
 </style>
