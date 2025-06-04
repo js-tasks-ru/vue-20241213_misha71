@@ -139,6 +139,8 @@ describe('ts/UiFormGroup', () => {
           { description: 'description text from prop' },
           { description: 'Custom description' },
         )
+        console.info(description.text());
+
         expect(description.text()).toBe('Custom description')
       })
     })
