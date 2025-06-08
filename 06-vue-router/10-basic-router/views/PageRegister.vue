@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { UiButton, UiCheckbox, UiFormGroup, UiInput } from '@shgk/vue-course-ui'
 import { ref } from 'vue'
+import { router } from '../router/router.ts'
 import MeetupsAuthForm from '../components/MeetupsAuthForm.vue'
 import LayoutAuth from '../components/LayoutAuth.vue'
 import { register } from '../api.ts'
@@ -17,6 +18,11 @@ async function onSubmit() {
       email: email.value,
       fullname: fullname.value,
       password: password.value,
+    }).then(() => {
+      router.push({
+        name: 'login',
+        query: { from: '/register' },
+      })
     })
     // Регистрация прошла успешно
   } catch (error) {
@@ -52,7 +58,9 @@ async function onSubmit() {
 
       <template #append>
         Уже есть аккаунт?
-        <a href="/login">Войдите</a>
+        <router-link to="/login">
+          Войдите
+        </router-link>
       </template>
     </MeetupsAuthForm>
   </LayoutAuth>
