@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, RouteLocationRaw } from 'vue-router';
 interface UiLinkProps {
-  to?: string | { name: string;};
+  to?: RouteLocationRaw;
   href?: string;
   text?: string;
 }
