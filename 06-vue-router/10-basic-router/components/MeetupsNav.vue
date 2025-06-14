@@ -1,14 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterLink } from 'vue-router';
+const links = [
+  { to: '/', text: 'Главная' },
+  { to: '/foo', text: 'Страница Foo' },
+  { to: '/bar', text: 'Страница Bar' },
+  { to: '/login', text: 'Вход' },
+  { to: '/login?from=/foo', text: 'Вход /login?from=/foo' },
+  { to: '/login?from=/bar', text: 'Вход /login?from=/bar' },
+  { to: '/register', text: 'Регистрация' },
+]
 
+</script>
 <template>
   <nav class="nav">
-    <a href="/index" class="nav__link">Главная</a>
-    <a href="/foo" class="nav__link">Страница Foo</a>
-    <a href="/bar" class="nav__link">Страница Bar</a>
-    <a href="/login" class="nav__link">Вход</a>
-    <a href="/login?from=/foo" class="nav__link">Вход /login?from=/foo</a>
-    <a href="/login?from=/bar" class="nav__link">Вход /login?from=/bar</a>
-    <a href="/register" class="nav__link">Регистрация</a>
+    <component v-for="link in links" :key="link.to" :is="link.to ? RouterLink : 'a'" :to="link.to" :href="link.href" class="nav__link">
+      {{ link.text }}
+    </component>
   </nav>
 </template>
 
